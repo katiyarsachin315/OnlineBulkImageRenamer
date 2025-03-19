@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Batch rename images</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <div class="mainDiv" id="upload-mainDiv">
+        <div class="upload-container">            
+            <h2>Online Bulk Image Renamer</h2>
+            <div class="upload-icon">
+                <img src="{% static 'folderImg.svg' %}" alt="Upload Icon">
+            </div>
+            <form action="" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="upload-buttons">
+                    <input type="file" id="file-input" name="files" accept="image/*" multiple hidden>
+                    <label for="file-input" class="btn select-files" id="select-files-btn">Select Files</label>
+                </div>
+                <div class="upload-message">
+                    Click the button to upload
+                </div>
+                <div class="upload-support">
+                    Supports all image formats, unlimited number and size of files.
+                </div>
+                <button type="submit" class="btn upload-submit">Upload</button>
+                <div id="loader-container" style="display: none;">
+                    <div id="loader">
+                        <div id="progress-bar"></div>
+                    </div>
+                </div>
+            
+            </form>
+        </div>
+    </div>
+    <div class="success-message" id="success-message">
+        {{success_message}}
+        
+    </div>
+
+    <script src="{% static 'js/scripts.js' %}"></script>
+    <script src="{% static 'js/index.js' %}"></script>
+</body>
+</html>

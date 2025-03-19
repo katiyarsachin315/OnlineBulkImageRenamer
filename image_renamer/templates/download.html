@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Batch rename images</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <div class="mainDiv">
+            <div class="table-div">
+                        <h2>Online Bulk Image Renamer</h2>
+                        <table>
+                            <thead>
+                              <tr>
+                                <th>Original Image Name</th>
+                                <th>New Image Name</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                                {% for old_name, new_name in rename_dict.items %}
+                                <tr>
+                                    <td>{{ old_name }}</td>
+                                    <td>{{ new_name }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    <div class="button-container">
+                        <a href="{% url 'download_file' pk=fileobj.id %}">
+                        <button id="downloadButton" class="btn">Download Images</button>
+                        </a>
+                    </div>
+            </div>
+            <div class="success-message" id="success-message">
+                {{success_message}}
+            </div>
+    </div>
+
+
+
+    <script src="{% static 'js/download.js' %}"></script>
+    
+</body>
+</html>

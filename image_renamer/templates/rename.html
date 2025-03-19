@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Batch rename images</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <div class="mainDiv" id="rename-mainDiv">
+        <div class="upload-container" id="rename-container">
+            <h2>Online Bulk Image Renamer</h2>
+            <div class="seq-rename">
+                <p>If you want to rename images in sequence with any specific name, please click on the below button</p>
+                <label class="switch">
+                    <input type="checkbox" id="toggle-checkbox">
+                    <span class="slider"></span>
+                </label>
+                <form id="seq-rename-form" class="hidden">
+                    <input type="text" id="seq-rename-input" placeholder="Enter the image name">
+                    <button id="submit-btn" class="seq-rename-btn">Submit</button>
+                </form>
+            </div>
+            <div class="file-rename">
+                <p>If you want to rename images with a specific list, please click on the below button</p>
+                <label class="switch">
+                    <input type="checkbox" id="toggle-checkbox-file-rename">
+                    <span class="slider"></span>
+                </label>
+                <div class="file-rename-form hidden" id="file-rename-form-div">
+                    <form id="file-rename-form" action="" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="upload-buttons">
+                            <input type="file" id="file-input" name="renameList" accept=".xlsx, .xls" hidden>
+                            <label for="file-input" class="btn select-files" id="select-files-btn">Select Files</label>
+                        </div>
+                        <div class="upload-message">
+                            <b>Please upload a excel file with a specific list:</b>
+                            Click the button to upload the file 
+                        </div>
+                        <button type="submit" id="file-rename-form-btn" name="file-rename-submit" class="btn upload-submit">Upload</button>
+                    </form>
+                </div>
+            </div>
+            <form action="" method="post" id="rename-form">
+                    {% csrf_token %}
+                    <div class="table-div">
+                        
+                        <table>
+                            <thead>
+                              <tr>
+                                <th>Original Image Name</th>
+                                <th>New Image Name (Click to edit)</th>
+                              </tr>
+                            </thead>
+                            <tbody id="tableBody">
+                                <!-- Table body will be generated dynamically -->
+                            </tbody>
+                        </table>
+                        <div class="button-container">
+                            <button type="submit" name="rename-submit" id="renameButton" class="btn">Rename Images</button>
+                        </div>
+                    </div>
+            </form>
+        </div>
+        <p style="display: none;" id="uploaded_files_name">{{ uploaded_files_name }}
+    </div>
+
+    <script src="{% static 'js/rename.js' %}"></script>
+</body>
+</html>
