@@ -6,7 +6,7 @@ from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 from .models import FileUpload
 import os
-from .utils import validate_image_extensions,create_folder,get_files_in_folder,rename_file_names,zip_folder,clean_images_name,rename_list_upload_file,rename_files_with_given_list
+from .utils import *
 import pandas as pd
 
 
@@ -32,7 +32,6 @@ def upload(request):
             upload_obj.fullURL = folder_path
             upload_obj.save()
             Full_folder_path = os.path.join(media_root, foldername)
-            # files = request.FILES.getlist('files')
             fs = FileSystemStorage(location=Full_folder_path)
             for file in files:
                 fs.save(file.name, file)
@@ -51,24 +50,39 @@ def rename_files(request, pk):
     folder_path = fileobj.fullURL
     media_root = settings.MEDIA_ROOT
     Full_folder_path = os.path.join(media_root, folder_path)
-    uploaded_files_name = get_files_in_folder(Full_folder_path)
+    uploaded_files_name = get_files_in_folder(Full_folder_path, allow_extensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'tiff', 'webp'])
     uploaded_files_name_clean={}
     
     uploaded_files_name_clean = clean_images_name(uploaded_files_name)
+    print("uploaded_files_name_clean",uploaded_files_name_clean)
+    base_url = request.build_absolute_uri('/')
+    excelFilePath = create_excel_file(uploaded_files_name_clean, Full_folder_path, base_url)
+    print("excelFilePath",excelFilePath)
+    
     
     if request.method == 'POST':
         if 'file-rename-submit' in request.POST:
             files = request.FILES.get('renameList')
             rename_list_file_foldername = 'rename_list_file'
             create_folder(Full_folder_path, rename_list_file_foldername)
-            print("files",files)
-            rename_list_file_path = f"{Full_folder_path}\\{rename_list_file_foldername}"
-            print("rename_list_file_path",rename_list_file_path)
-            if (files):
-                images_name_array = rename_list_upload_file(files, rename_list_file_path)
-                uploaded_files_name_clean = rename_files_with_given_list(images_name_array, uploaded_files_name_clean)
-                
+
+            if files:
+                rename_list_file_path = os.path.join(Full_folder_path, rename_list_file_foldername, files.name)
+
+                # Replace the old file if it already exists
+                if os.path.exists(rename_list_file_path):
+                    os.remove(rename_list_file_path)
+
+                # Save the new uploaded file
+                with open(rename_list_file_path, 'wb+') as destination:
+                    for chunk in files.chunks():
+                        destination.write(chunk)
+
+                # Now you can read from the saved file
+                uploaded_files_name_clean = excel_to_dict(rename_list_file_path)
                 request.session['uploaded_files_name_clean'] = uploaded_files_name_clean
+
+                print("uploaded_files_name_clean", uploaded_files_name_clean)
     
         if 'rename-submit' in request.POST:
             rename_dict = {}
@@ -77,7 +91,7 @@ def rename_files(request, pk):
                 if key != 'csrfmiddlewaretoken' and key != 'rename-submit':
                     rename_dict[key] = value         
 
-            rename_message = rename_file_names(Full_folder_path, rename_dict)
+            rename_message = rename_file_names(Full_folder_path, rename_dict, allowed_extensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.tiff', '.webp'])
             print("rename_message:",rename_message)
             renamed_files_path = os.path.join(Full_folder_path, 'renamed_files')
             renamedZipFileURL = zip_folder(renamed_files_path, 'renamed_files.zip')
@@ -96,6 +110,7 @@ def rename_files(request, pk):
 
     context = {
         'uploaded_files_name': uploaded_files_name_clean,
+        'ImageNameFileURL' : excelFilePath,
     }
     
     return render(request, 'rename.html', context)
@@ -136,3 +151,28 @@ def download_file(request, pk):
     except Exception as e:
         print(f"Error opening file: {e}")
         raise Http404("Error occurred while downloading the file")
+    
+
+# # This is the delete_folder view
+# def delete_folder(request, pk):
+#     print("Delete view")
+#     try:
+#         # Get the file object by its primary key (ID)
+#         fileobj = FileUpload.objects.get(id=pk)
+        
+#         # Get the folder path where files are stored (this assumes the folder path is saved in the model)
+#         folder_path = fileobj.folder_path
+        
+#         # Check if the folder exists and delete it
+#         if os.path.exists(folder_path):
+#             shutil.rmtree(folder_path)
+#             print(f"Deleted folder: {folder_path}")
+#         else:
+#             print(f"Folder does not exist: {folder_path}")
+
+#         return HttpResponse("Folder deleted successfully.", status=200)
+
+#     except UploadedFile.DoesNotExist:
+#         return HttpResponse("File not found.", status=404)
+#     except Exception as e:
+#         return HttpResponse(f"Error deleting folder: {str(e)}", status=500)

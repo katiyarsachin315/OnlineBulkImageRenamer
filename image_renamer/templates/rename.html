@@ -11,6 +11,27 @@
     <div class="mainDiv" id="rename-mainDiv">
         <div class="upload-container" id="rename-container">
             <h2>Online Bulk Image Renamer</h2>
+
+            <div class="extensionDropdownContainer">
+                <label for="imageExtensionDropdown"><strong>Select image file extension:</strong></label>
+                <select id="imageExtensionDropdown" class="dropdown">
+                    <option value="">--Select Extension--</option>
+                    <option value="preserved">Preserved (original extension)</option>
+                    <option value="jpg">.jpg</option>
+                    <option value="jpeg">.jpeg</option>
+                    <option value="png">.png</option>
+                </select>
+            </div>
+            
+
+            <div class="excelBtnContainer">
+                <p>If you want to download the Excel file of the image names, please click on the button below:</p>
+                
+                <a href="{{ ImageNameFileURL }}" target="_blank" class="btn download-excelBtn" download>
+                    Download File
+                </a>
+            </div>
+
             <div class="seq-rename">
                 <p>If you want to rename images in sequence with any specific name, please click on the below button</p>
                 <label class="switch">

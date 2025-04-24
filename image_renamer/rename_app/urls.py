@@ -7,4 +7,6 @@ urlpatterns = [
     path('rename/<int:pk>/', rename_files, name='rename_files'),
     path('download/<int:pk>/', download_zip, name='download_zip'),
     path('download_file/<int:pk>/', download_file, name='download_file'),
+    # path('delete_folder/<int:pk>/', delete_folder, name='delete_folder'),
+
 ]

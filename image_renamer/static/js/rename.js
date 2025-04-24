@@ -60,13 +60,6 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(checkSeqToggleStatus, 0);
     });
 
-    // toggleCheckboxFileRename.addEventListener('change', () => {
-    //     if (toggleCheckboxFileRename.checked) {
-    //         fileRenameFormDiv.classList.remove('hidden');
-    //     } else {
-    //         fileRenameFormDiv.classList.add('hidden');
-    //     }
-    // });
 
     form.addEventListener('submit', (event) => {
         event.preventDefault();
@@ -97,7 +90,6 @@ document.addEventListener('DOMContentLoaded', () => {
         for (var key in dictionary) {
             if (dictionary.hasOwnProperty(key)) {
                 var fileExtension = dictionary[key].split('.').pop();
-                // updatedDictionary[key] = baseText + '_' + count + '.' + fileExtension;
                 updatedDictionary[key] = count + '_' + baseText + '.' + fileExtension;
                 count++;
             }
@@ -110,7 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log("Table generate function");
         console.log("dict inside table", dict);
         var tableBody = document.getElementById('tableBody');
-        tableBody.innerHTML = ''; // Clear existing rows if any 
+        tableBody.innerHTML = '';
     
         for (var key in dict) {
             if (dict.hasOwnProperty(key)) {

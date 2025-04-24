@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', (event) => {
     const fileInput = document.querySelector('#file-input');
+    console.log('fileInput:', fileInput);
     const uploadMessage = document.querySelector('.upload-message');
     const loader = document.querySelector('#loader');
     const select_files_btn = document.querySelector('#select-files-btn');
